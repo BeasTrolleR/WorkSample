@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    //Keybindings
-    [SerializeField] private KeyCode jumpInput = KeyCode.Space;
+    //Input
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     //Movement
     private Vector3 playerInput;
-    private Vector3 playerDirection;
+    [HideInInspector] public Vector3 playerDirection;
+    [HideInInspector] public bool isJumping;
 
     void Update()
     {
@@ -21,21 +22,8 @@ public class InputManager : MonoBehaviour
         playerInput.x = Input.GetAxisRaw("Horizontal");
         playerInput.z = Input.GetAxisRaw("Vertical");
         playerDirection = new Vector3(playerInput.x, 0f, playerInput.z).normalized;
-    }
 
-    public Vector3 MoveInput
-    {
-        get
-        { return playerDirection;}
-        private set
-        {playerDirection = value;}
+        //Jump
+        isJumping |= Input.GetKeyDown(jumpKey);
     }
-    public KeyCode JumpInput
-    {
-        get
-        { return jumpInput; }
-        private set
-        { jumpInput = value; }
-    }
-
 }

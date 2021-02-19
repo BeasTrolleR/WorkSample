@@ -28,24 +28,27 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        PlayerMove(inputManager.MoveInput);
+        PlayerMove();
+        PlayerJump();
     }
 
     private void Update()
     {
-        PlayerJump(inputManager.JumpInput);
+
     }
 
-    private void PlayerMove(Vector3 moveDirection)
+    private void PlayerMove()
     {
         //Move
-        playerRigidbody.MovePosition(transform.position + (moveDirection * playerMoveSpeed * Time.deltaTime));
+        playerRigidbody.MovePosition(transform.position + (inputManager.playerDirection * playerMoveSpeed * Time.deltaTime));
     }
 
-    private void PlayerJump(KeyCode jumpKey)
+    private void PlayerJump()
     {
-        //Jump
-        if (Input.GetKeyDown(jumpKey))
-            playerRigidbody.velocity = Vector3.up * playerJumpHeight;
+        if (inputManager.isJumping)
+        {
+            inputManager.isJumping = false;
+            playerRigidbody.velocity = Vector3.up.normalized * playerJumpHeight;
+        }
     }
 }
