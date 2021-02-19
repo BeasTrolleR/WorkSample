@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int maxMana = 10;
     [Range (1, 99)]
     [SerializeField] private float playerMoveSpeed = 10f;
+    [Range(1, 99)]
+    [SerializeField] private float playerJumpHeight = 10f;
 
     //Components
     private Rigidbody playerRigidbody;
@@ -26,12 +28,24 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
-        MovePlayer(inputManager.PlayerDirection);
+        PlayerMove(inputManager.MoveInput);
     }
 
-    private void MovePlayer(Vector3 moveDirection)
+    private void Update()
     {
-        //Moves the player.
+        PlayerJump(inputManager.JumpInput);
+    }
+
+    private void PlayerMove(Vector3 moveDirection)
+    {
+        //Move
         playerRigidbody.MovePosition(transform.position + (moveDirection * playerMoveSpeed * Time.deltaTime));
+    }
+
+    private void PlayerJump(KeyCode jumpKey)
+    {
+        //Jump
+        if (Input.GetKeyDown(jumpKey))
+            playerRigidbody.velocity = Vector3.up * playerJumpHeight;
     }
 }
