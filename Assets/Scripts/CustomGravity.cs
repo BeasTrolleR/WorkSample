@@ -1,11 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GravityPull : MonoBehaviour
+public class CustomGravity : MonoBehaviour
 {
+    private Vector3 upAxis;
+    
     // Start is called before the first frame update
     void Start()
+    {
+        upAxis = Physics.gravity.normalized;
+
+    }
+
+    private void FixedUpdate()
     {
         
     }
