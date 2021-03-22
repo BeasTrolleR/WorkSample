@@ -5,15 +5,8 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    [Header("Toggle Gamepad/Keyboard")]
-    [SerializeField] private bool useGamepad = false;
-
     //Editable Keyboard Input
-    [Header("Keyboard Input")]
-    [SerializeField] private KeyCode upKey = KeyCode.W;
-    [SerializeField] private KeyCode leftKey = KeyCode.A;
-    [SerializeField] private KeyCode downKey = KeyCode.S;
-    [SerializeField] private KeyCode rightKey = KeyCode.D;
+    [Header("Player Keybinds")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     
     //Movement
@@ -30,15 +23,10 @@ public class InputManager : MonoBehaviour
 
     private void PlayerInput()
     {
-        //Directional Input (KEYBOARD)
-        
-        //Directional Input (GAMEPAD)
         playerInput.x = Input.GetAxisRaw("Horizontal");
         playerInput.z = Input.GetAxisRaw("Vertical");
         playerDirection = new Vector3(playerInput.x, 0f, playerInput.z).normalized;
-
-        //Jump Input
+            
         isJumping |= Input.GetKeyDown(jumpKey);
-
     }
 }

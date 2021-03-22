@@ -5,12 +5,12 @@ using UnityEngine;
 
 public class CustomGravity : MonoBehaviour
 {
-    private Vector3 upAxis;
+    [HideInInspector] public Vector3 upAxis;
     
     // Start is called before the first frame update
     void Start()
     {
-        upAxis = Physics.gravity.normalized;
+        upAxis = -Physics.gravity.normalized;
 
     }
 
