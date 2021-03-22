@@ -27,8 +27,7 @@ public class InputManager : MonoBehaviour
         playerInput.x = Input.GetAxisRaw("Horizontal");
         playerInput.z = Input.GetAxisRaw("Vertical");
         playerDirection = new Vector3(playerInput.x, 0f, playerInput.z);
-        Debug.Log(playerDirection);
-        
+
         //Jump Input check
         isJumping |= Input.GetKeyDown(jumpKey);
     }
