@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6d1c65cf-537f-4a1b-893c-0bd868fd4040" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.WorkSample/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.WorkSample/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/00.Sandbox.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/00.Sandbox.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/CustomGravity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/CustomGravity.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/InputManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/InputManager.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" afterDir="false" />
@@ -26,9 +25,9 @@
   </component>
   <component name="IdeDocumentHistory">
     <changedPaths>
+      <option value="$PROJECT_DIR$/Assets/Scripts/InputManager.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/CustomGravity.cs" />
       <option value="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" />
-      <option value="$PROJECT_DIR$/Assets/Scripts/InputManager.cs" />
     </changedPaths>
   </component>
   <component name="ProjectId" id="1pcNwrvrSshaVNt8WQp7EqAdTr0" />
@@ -82,7 +81,7 @@
       <workItem from="1615976150721" duration="2955000" />
       <workItem from="1615982468428" duration="470000" />
       <workItem from="1615984343998" duration="2756000" />
-      <workItem from="1616412975415" duration="12899000" />
+      <workItem from="1616412975415" duration="14545000" />
     </task>
     <servers />
   </component>

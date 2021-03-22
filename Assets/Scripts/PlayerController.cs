@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-[RequireComponent(typeof(CustomGravity))]
 public class PlayerController : MonoBehaviour
 {   
     //Editable character stats
@@ -19,6 +18,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float playerRotateSpeed = 10f;
     [Range(1, 99)]
     [SerializeField] private float playerJumpHeight = 10f;
+    
+    //Public
+    [HideInInspector] public Vector3 upAxis;
 
     //Component references
     private Rigidbody playerRigidbody;
@@ -26,7 +28,6 @@ public class PlayerController : MonoBehaviour
     private CapsuleCollider playerCollider;
 
     //Misc Variables
-    private Vector3 playerUpAxis;
     private Quaternion playerRotation;
     private float distToGround;
 
@@ -39,14 +40,14 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        playerUpAxis = GetComponent<CustomGravity>().upAxis;
-        
         //Using the player collider to determine distance to ground
         distToGround = playerCollider.bounds.extents.y;
     }
 
     void FixedUpdate()
     {
+        upAxis = -Physics.gravity.normalized;
+            
         PlayerMove();
         
         //Jump Check
@@ -65,13 +66,13 @@ public class PlayerController : MonoBehaviour
     private void PlayerMove()
     {
         //Move player according to input direction
-        playerRigidbody.MovePosition(transform.position + (inputManager.playerDirection * (playerMoveSpeed * Time.deltaTime)));
+        playerRigidbody.MovePosition(transform.position + (inputManager.playerDirection.normalized * (playerMoveSpeed * Time.deltaTime)));
         
         //Check if player is moving and rotate player accordingly
         if (inputManager.playerDirection != Vector3.zero)
         {
             //Store current player direction and rotate player accordingly, mathf.pow is used to avoid high numbers when tweaking
-            playerRotation = Quaternion.LookRotation(inputManager.playerDirection, playerUpAxis);
+            playerRotation = Quaternion.LookRotation(inputManager.playerDirection, upAxis);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, playerRotation, Mathf.Pow(playerRotateSpeed,2)*Time.deltaTime);
         }
     }
@@ -81,13 +82,13 @@ public class PlayerController : MonoBehaviour
         //Make the player jump using velocity
         if (IsPlayerGrounded())
         {
-            playerRigidbody.velocity = playerUpAxis.normalized * playerJumpHeight;
+            playerRigidbody.velocity = upAxis.normalized * playerJumpHeight;
         }
     }
 
     private bool IsPlayerGrounded()
     {
         //Ground check, shooting a raycast a fixed distance towards the ground
-        return Physics.Raycast(playerCollider.bounds.center, -playerUpAxis, distToGround + 0.1f);
+        return Physics.Raycast(playerCollider.bounds.center, -upAxis, distToGround + 0.1f);
     }
 }

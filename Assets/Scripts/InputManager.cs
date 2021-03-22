@@ -6,7 +6,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour
 {
     //Editable Keyboard Input
-    [Header("Player Keybinds")]
+    [Header("Player Keybindings")]
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     
     //Movement
@@ -23,10 +23,13 @@ public class InputManager : MonoBehaviour
 
     private void PlayerInput()
     {
+        //Directional Input
         playerInput.x = Input.GetAxisRaw("Horizontal");
         playerInput.z = Input.GetAxisRaw("Vertical");
-        playerDirection = new Vector3(playerInput.x, 0f, playerInput.z).normalized;
-            
+        playerDirection = new Vector3(playerInput.x, 0f, playerInput.z);
+        Debug.Log(playerDirection);
+        
+        //Jump Input check
         isJumping |= Input.GetKeyDown(jumpKey);
     }
 }
