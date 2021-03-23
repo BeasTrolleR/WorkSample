@@ -45,6 +45,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerVelocity;
     private Vector3 playerDisplacement;
     private Vector3 desiredVelocity;
+    private Vector3 contactNormal;
     private float maxSpeedChange;
 
     //Misc
@@ -117,6 +118,10 @@ public class PlayerController : MonoBehaviour
         {
             jumpCount = 0;
         }
+        else
+        {
+            contactNormal = Vector3.up;
+        }
     }
 
     private void PlayerMove()
@@ -138,17 +143,24 @@ public class PlayerController : MonoBehaviour
         {
             jumpCount++;
             float jumpVelocity = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
+            float alignVelocity = Vector3.Dot(playerVelocity, contactNormal);
             
             //Limit upward velocity to avoid spamming jump and increase speed.
             //Also makes the jump more consistent and accurate in jump height even if u are already falling downwards.
-            if (playerVelocity.y > 0f || playerVelocity.y < 0f)
+            if (alignVelocity > 0f)
             {
                 jumpVelocity = Mathf.Max(jumpVelocity - playerVelocity.y, 0f);
             }
 
             //Jump Player
-            playerVelocity.y += jumpVelocity;
+            playerVelocity += contactNormal * jumpVelocity;
+            //(playerVelocity.y += jumpVelocity;
         }
+    }
+
+    private Vector3 ProjectOnContactPlane(Vector3 vector)
+    {
+        return vector;
     }
 
     //Ground check based on normal direction of collided object.
@@ -156,8 +168,16 @@ public class PlayerController : MonoBehaviour
     {
         for (int i = 0; i < collision.contactCount; i++)
         {
-            Vector3 contactNormal = collision.GetContact(i).normal;
-            onGround |= contactNormal.y >= minGroundDotProduct;
+            Vector3 groundNormal = collision.GetContact(i).normal;
+            
+            //Keep track of contact normal
+            if (contactNormal.y >= minGroundDotProduct)
+            {
+                onGround = true;
+                contactNormal = groundNormal;
+            }
+
+            //onGround |= groundNormal.y >= minGroundDotProduct;
         }
     }
 

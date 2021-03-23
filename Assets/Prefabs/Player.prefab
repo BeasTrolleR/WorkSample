@@ -49,10 +49,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpKey: 330
   playerMoveSpeed: 8
-  playerAcceleration: 50
+  playerAcceleration: 25
   playerRotateSpeed: 25
-  playerAirJumps: 5
-  playerJumpHeight: 2
+  playerAirJumps: 0
+  playerJumpHeight: 1
   playerAirAcceleration: 0
   maxGroundAngle: 65
 --- !u!136 &4118614147853998388
