@@ -10,11 +10,10 @@ public class InputManager : MonoBehaviour
     [SerializeField] private KeyCode jumpKey = KeyCode.Space;
     
     //Movement
-    [HideInInspector] public Vector3 playerDirection;
     [HideInInspector] public bool isJumping, isNotJumping;
     
     //Misc Variables
-    private Vector3 playerInput;
+    [HideInInspector]public Vector3 playerInput;
 
     void Update()
     {
@@ -23,10 +22,10 @@ public class InputManager : MonoBehaviour
 
     private void PlayerInput()
     {
-        //Directional Input
+        //Directional Input, using ClampMagnitude instead of Normalize for diagonal movement input.
         playerInput.x = Input.GetAxisRaw("Horizontal");
         playerInput.z = Input.GetAxisRaw("Vertical");
-        playerDirection = new Vector3(playerInput.x, 0f, playerInput.z);
+        playerInput = Vector3.ClampMagnitude(playerInput, 1f);
 
         //Jump Input check
         isJumping |= Input.GetKeyDown(jumpKey);

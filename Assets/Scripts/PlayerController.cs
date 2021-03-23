@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(CapsuleCollider))]
 public class PlayerController : MonoBehaviour
 {   
     //Editable character stats
-    [Header("Character Settings")]
-    [Range(1, 999)]
-    [SerializeField] private int maxHealth = 10;
-    [Range(1, 999)]
-    [SerializeField] private int maxMana = 10;
-    [Range (1, 99)]
+    [Header("Character Settings")] 
+    [Range(1, 99)]
     [SerializeField] private float playerMoveSpeed = 10f;
+    [Range(1, 99)]
+    [SerializeField] private float playerAcceleration = 10f;
     [Range (1, 99)]
     [SerializeField] private float playerRotateSpeed = 10f;
     [Range(1, 99)]
@@ -27,9 +26,13 @@ public class PlayerController : MonoBehaviour
     private InputManager inputManager;
     private CapsuleCollider playerCollider;
 
-    //Misc Variables
+    //Movement
     private Quaternion playerRotation;
-    private float distToGround;
+    private Vector3 playerVelocity;
+    private Vector3 desiredVelocity;
+    private Vector3 playerDisplacement;
+    private Vector3 desiredPosition;
+    private float maxSpeedChange;
 
     void Awake()
     {
@@ -40,8 +43,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        //Using the player collider to determine distance to ground
-        distToGround = playerCollider.bounds.extents.y;
+        
     }
 
     void FixedUpdate()
@@ -60,35 +62,31 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        IsPlayerGrounded();
+        
     }
 
     private void PlayerMove()
     {
-        //Move player according to input direction
-        playerRigidbody.MovePosition(transform.position + (inputManager.playerDirection.normalized * (playerMoveSpeed * Time.deltaTime)));
-        
-        //Check if player is moving and rotate player accordingly
-        if (inputManager.playerDirection != Vector3.zero)
+        //Combining acceleration and velocity to acquire smoother movement
+        desiredVelocity = new Vector3(inputManager.playerInput.x, 0f, inputManager.playerInput.z) * playerMoveSpeed;
+        maxSpeedChange = playerAcceleration * Time.deltaTime;
+        playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, desiredVelocity.x, maxSpeedChange);
+        playerVelocity.z = Mathf.MoveTowards(playerVelocity.z, desiredVelocity.z, maxSpeedChange);
+        //Move player to a new position
+        playerDisplacement = playerVelocity * Time.deltaTime;
+        desiredPosition = transform.localPosition += playerDisplacement;
+
+        //Check if player is in motion and rotate player accordingly
+        if (playerVelocity != Vector3.zero)
         {
             //Store current player direction and rotate player accordingly, mathf.pow is used to avoid high numbers when tweaking
-            playerRotation = Quaternion.LookRotation(inputManager.playerDirection, upAxis);
+            playerRotation = Quaternion.LookRotation(playerVelocity, upAxis);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, playerRotation, Mathf.Pow(playerRotateSpeed,2)*Time.deltaTime);
         }
     }
 
     private void PlayerJump()
     {
-        //Make the player jump using velocity
-        if (IsPlayerGrounded())
-        {
-            playerRigidbody.velocity = upAxis.normalized * playerJumpHeight;
-        }
-    }
-
-    private bool IsPlayerGrounded()
-    {
-        //Ground check, shooting a raycast a fixed distance towards the ground
-        return Physics.Raycast(playerCollider.bounds.center, -upAxis, distToGround + 0.1f);
+        
     }
 }
