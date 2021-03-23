@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 playerDisplacement;
     private Vector3 desiredVelocity;
     private float maxSpeedChange;
-    
+
     //Misc
     private int jumpCount;
     private bool onGround;
@@ -137,17 +137,17 @@ public class PlayerController : MonoBehaviour
         if (onGround || jumpCount < playerAirJumps)
         {
             jumpCount++;
-            float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
+            float jumpVelocity = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
             
             //Limit upward velocity to avoid spamming jump and increase speed.
             //Also makes the jump more consistent and accurate in jump height even if u are already falling downwards.
             if (playerVelocity.y > 0f || playerVelocity.y < 0f)
             {
-                jumpSpeed = Mathf.Max(jumpSpeed - playerVelocity.y, 0f);
+                jumpVelocity = Mathf.Max(jumpVelocity - playerVelocity.y, 0f);
             }
 
             //Jump Player
-            playerVelocity.y += jumpSpeed;
+            playerVelocity.y += jumpVelocity;
         }
     }
 
