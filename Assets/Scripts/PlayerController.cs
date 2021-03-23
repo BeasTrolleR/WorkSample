@@ -20,8 +20,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float playerMoveSpeed = 10f;
     [Range(0, 99)][Tooltip("How fast player accelerate when moving.")]
     [SerializeField] private float playerAcceleration = 10f;
-    [Range (0, 99)][Tooltip("How fast player rotates towards movement direction.")]
-    [SerializeField] private float playerRotateSpeed = 10f;
     [Range(0, 5)][Tooltip("Number of Air Jumps allowed.")]
     [SerializeField] private int playerAirJumps = 0;
     [Range(1, 99)][Tooltip("Height in meters.")]
@@ -41,7 +39,6 @@ public class PlayerController : MonoBehaviour
     private Rigidbody playerRigidbody;
 
     //Movement
-    private Quaternion playerRotation;
     private Vector3 playerVelocity;
     private Vector3 playerDisplacement;
     private Vector3 desiredVelocity;
@@ -126,13 +123,6 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerMove()
     {
-        //Rotate if player is moving
-        if (playerVelocity.x != 0f || playerVelocity.z != 0f)
-        {
-            playerRotation = Quaternion.LookRotation(new Vector3(playerVelocity.x, 0f, playerVelocity.z), Vector3.up);
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, playerRotation, Mathf.Pow(playerRotateSpeed,2)*Time.deltaTime);
-        }
-
         //Move Player
         playerRigidbody.velocity = playerVelocity;
     }
