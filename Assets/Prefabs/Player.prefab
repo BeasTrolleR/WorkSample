@@ -51,10 +51,10 @@ MonoBehaviour:
   playerMoveSpeed: 8
   playerAcceleration: 50
   playerRotateSpeed: 25
-  playerAirJumps: 0
+  playerAirJumps: 5
   playerJumpHeight: 2
   playerAirAcceleration: 0
-  maxGroundAngle: 35
+  maxGroundAngle: 65
 --- !u!136 &4118614147853998388
 CapsuleCollider:
   m_ObjectHideFlags: 0

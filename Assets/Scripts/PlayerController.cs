@@ -127,7 +127,7 @@ public class PlayerController : MonoBehaviour
             playerRotation = Quaternion.LookRotation(new Vector3(playerVelocity.x, 0f, playerVelocity.z), Vector3.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, playerRotation, Mathf.Pow(playerRotateSpeed,2)*Time.deltaTime);
         }
-        
+
         //Move Player
         playerRigidbody.velocity = playerVelocity;
     }
@@ -137,10 +137,17 @@ public class PlayerController : MonoBehaviour
         if (onGround || jumpCount < playerAirJumps)
         {
             jumpCount++;
-            //Want jump height do be consistent and unaffected by downwards forces, so resetting velocity.Y before jumping
-            playerVelocity.y = 0f;
-            //This allows me to get a more accurate jump height. For example, a playerJumpHeight of 1 is very close to 1 meter in game.
-            playerVelocity.y += Mathf.Sqrt(-2 * Physics.gravity.y * playerJumpHeight);   
+            float jumpSpeed = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
+            
+            //Limit upward velocity to avoid spamming jump and increase speed.
+            //Also makes the jump more consistent and accurate in jump height even if u are already falling downwards.
+            if (playerVelocity.y > 0f || playerVelocity.y < 0f)
+            {
+                jumpSpeed = Mathf.Max(jumpSpeed - playerVelocity.y, 0f);
+            }
+
+            //Jump Player
+            playerVelocity.y += jumpSpeed;
         }
     }
 
