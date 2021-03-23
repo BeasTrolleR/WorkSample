@@ -46,10 +46,11 @@ public class PlayerController : MonoBehaviour
     private float maxSpeedChange;
 
     //Misc
+    private int groundContactCount;
     private int jumpCount;
-    private bool onGround;
+    private bool onGround => groundContactCount > 0;
     private float minGroundDotProduct;
-    
+
     #endregion
 
     private void OnValidate()
@@ -65,6 +66,7 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
+        Debug.Log(groundContactCount);
         PlayerInput();
     }
 
@@ -73,8 +75,8 @@ public class PlayerController : MonoBehaviour
         UpdateState();
         AdjustVelocity();
         playerRigidbody.velocity = playerVelocity;
-        onGround = false;
-        
+        ClearState();
+
     }
 
     private void PlayerInput()
@@ -117,6 +119,14 @@ public class PlayerController : MonoBehaviour
         
     }
 
+    //Used to reset normal and ground contact count
+    private void ClearState()
+    {
+        groundContactCount = 0;
+        contactNormal = Vector3.zero;
+    }
+
+    //Keep track of the jump phase
     private void UpdateState()
     {
         playerVelocity = playerRigidbody.velocity;
@@ -124,6 +134,10 @@ public class PlayerController : MonoBehaviour
         if (onGround)
         {
             jumpCount = 0;
+            if (groundContactCount > 1)
+            {
+                contactNormal.Normalize();
+            }
         }
         else
         {
@@ -164,14 +178,12 @@ public class PlayerController : MonoBehaviour
         {
             Vector3 groundNormal = collision.GetContact(i).normal;
             
-            //Keep track of contact normal
-            if (contactNormal.y >= minGroundDotProduct)
+            //Keep count of how many normals in contact
+            if (groundNormal.y >= minGroundDotProduct)
             {
-                onGround = true;
-                contactNormal = groundNormal;
+                groundContactCount += 1;
+                contactNormal += groundNormal;
             }
-
-            //onGround |= groundNormal.y >= minGroundDotProduct;
         }
     }
 
