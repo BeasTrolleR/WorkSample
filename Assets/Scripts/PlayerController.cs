@@ -93,12 +93,21 @@ public class PlayerController : MonoBehaviour
 
     private void AdjustVelocity()
     {
+        Vector3 xAxis = ProjectOnContactPlane(Vector3.right).normalized;
+        Vector3 zAxis = ProjectOnContactPlane(Vector3.forward).normalized;
+        
+        float currentX = Vector3.Dot(playerVelocity, xAxis);
+        float currentZ = Vector3.Dot(playerVelocity, zAxis);
+        
         //Adjust velocity & use different acceleration settings bases on if grounded or not
         var acceleration = onGround ? playerAcceleration : playerAirAcceleration;
         maxSpeedChange = acceleration * Time.deltaTime;
-        playerVelocity.x = Mathf.MoveTowards(playerVelocity.x, desiredVelocity.x, maxSpeedChange);
-        playerVelocity.z = Mathf.MoveTowards(playerVelocity.z, desiredVelocity.z, maxSpeedChange);
         
+        float newX = Mathf.MoveTowards(currentX, desiredVelocity.x, maxSpeedChange);
+        float newZ = Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
+        
+        playerVelocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+
         //Jump Check
         if (isJumping)
         {
