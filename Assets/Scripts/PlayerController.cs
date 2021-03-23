@@ -72,7 +72,9 @@ public class PlayerController : MonoBehaviour
     {
         UpdateState();
         AdjustVelocity();
-        PlayerMove();
+        playerRigidbody.velocity = playerVelocity;
+        onGround = false;
+        
     }
 
     private void PlayerInput()
@@ -104,7 +106,6 @@ public class PlayerController : MonoBehaviour
             PlayerJump();
         }
         
-        onGround = false;
     }
 
     private void UpdateState()
@@ -119,12 +120,6 @@ public class PlayerController : MonoBehaviour
         {
             contactNormal = Vector3.up;
         }
-    }
-
-    private void PlayerMove()
-    {
-        //Move Player
-        playerRigidbody.velocity = playerVelocity;
     }
 
     private void PlayerJump()
@@ -150,7 +145,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 ProjectOnContactPlane(Vector3 vector)
     {
-        return vector;
+        return vector - contactNormal * Vector3.Dot(vector, contactNormal);
     }
 
     //Ground check based on normal direction of collided object.
