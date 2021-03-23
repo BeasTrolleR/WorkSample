@@ -9,6 +9,11 @@ using UnityEngine.PlayerLoop;
 public class PlayerController : MonoBehaviour
 {
     #region Variables
+    
+    //Editable keybindings
+    [Header("Player Keybindings")]
+    [SerializeField] private KeyCode jumpKey = KeyCode.Space;
+
     //Editable character stats
     [Header("Character Movement Settings")] 
     [Range(0, 99)][Tooltip("How fast player moves in a direction")]
@@ -28,10 +33,12 @@ public class PlayerController : MonoBehaviour
     [Range(0, 90)][Tooltip("Max angle on what is considered ground")]
     [SerializeField] private float maxGroundAngle = 25f;
     
+    //Player Input
+    private Vector3 playerInput;
+    private bool isJumping;
+    
     //Component references
     private Rigidbody playerRigidbody;
-    private InputManager inputManager;
-    //private CapsuleCollider playerCollider;
 
     //Movement
     private Quaternion playerRotation;
@@ -55,15 +62,12 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         playerRigidbody = GetComponent<Rigidbody>();
-        inputManager = FindObjectOfType<InputManager>();
         OnValidate();
-        //playerCollider = GetComponent<CapsuleCollider>();
     }
     
     void Update()
     {
-        //Using player input for desired velocity
-        desiredVelocity = new Vector3(inputManager.playerInput.x, 0f, inputManager.playerInput.z) * playerMoveSpeed;
+        PlayerInput();
     }
 
     void FixedUpdate()
@@ -71,6 +75,20 @@ public class PlayerController : MonoBehaviour
         UpdateState();
         AdjustVelocity();
         PlayerMove();
+    }
+
+    private void PlayerInput()
+    {
+        //Directional Input, using ClampMagnitude instead of Normalize for diagonal movement input.
+        playerInput.x = Input.GetAxisRaw("Horizontal");
+        playerInput.z = Input.GetAxisRaw("Vertical");
+        playerInput = Vector3.ClampMagnitude(playerInput, 1f);
+
+        //Jump Input check
+        isJumping |= Input.GetKeyDown(jumpKey);
+        
+        //Using player input for desired velocity
+        desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.z) * playerMoveSpeed;
     }
 
     private void AdjustVelocity()
@@ -82,9 +100,9 @@ public class PlayerController : MonoBehaviour
         playerVelocity.z = Mathf.MoveTowards(playerVelocity.z, desiredVelocity.z, maxSpeedChange);
         
         //Jump Check
-        if (inputManager.isJumping)
+        if (isJumping)
         {
-            inputManager.isJumping = false;
+            isJumping = false;
             PlayerJump();
         }
         

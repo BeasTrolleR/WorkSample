@@ -47,10 +47,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0950a820805e2e47b44410a0856dd8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jumpKey: 330
   playerMoveSpeed: 8
   playerAcceleration: 50
   playerRotateSpeed: 25
-  playerAirJumps: 5
+  playerAirJumps: 0
   playerJumpHeight: 2
   playerAirAcceleration: 0
   maxGroundAngle: 35
