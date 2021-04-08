@@ -126,7 +126,7 @@ public class PlayerController : MonoBehaviour
         contactNormal = Vector3.zero;
     }
 
-    //Keep track of the jump phase
+    //Keep track of the jump phase and ground contact.
     private void UpdateState()
     {
         playerVelocity = playerRigidbody.velocity;
