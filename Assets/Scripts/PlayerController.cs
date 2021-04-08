@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour
     [Header("Ground Settings")] 
     [Range(0, 90)][Tooltip("Max angle on what is considered ground")]
     [SerializeField] private float maxGroundAngle = 25f;
+    [Range(0, 99)][Tooltip("At what speed character snaps to ground")]
+    [SerializeField] private float maxGroundSnapSpeed = 99f;
     
     //Player Input
     private Vector3 playerInput;
@@ -47,6 +49,7 @@ public class PlayerController : MonoBehaviour
 
     //Misc
     private int groundContactCount;
+    private int lastGroundStep;
     private int jumpCount;
     private bool onGround => groundContactCount > 0;
     private float minGroundDotProduct;
@@ -66,7 +69,6 @@ public class PlayerController : MonoBehaviour
     
     void Update()
     {
-        Debug.Log(groundContactCount);
         PlayerInput();
     }
 
@@ -74,6 +76,7 @@ public class PlayerController : MonoBehaviour
     {
         UpdateState();
         AdjustVelocity();
+        GroundSnap();
         playerRigidbody.velocity = playerVelocity;
         ClearState();
 
@@ -129,10 +132,12 @@ public class PlayerController : MonoBehaviour
     //Keep track of the jump phase and ground contact.
     private void UpdateState()
     {
+        lastGroundStep += 1;
         playerVelocity = playerRigidbody.velocity;
         
         if (onGround)
         {
+            lastGroundStep = 0;
             jumpCount = 0;
             if (groundContactCount > 1)
             {
@@ -147,7 +152,7 @@ public class PlayerController : MonoBehaviour
 
     private void PlayerJump()
     {
-        if (onGround || jumpCount < playerAirJumps)
+        if (onGround || jumpCount < playerAirJumps || GroundSnap())
         {
             jumpCount++;
             float jumpVelocity = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
@@ -162,8 +167,51 @@ public class PlayerController : MonoBehaviour
 
             //Jump Player
             playerVelocity += contactNormal * jumpVelocity;
-            //(playerVelocity.y += jumpVelocity;
         }
+    }
+
+    //Keeps player snapped to ground
+    private bool GroundSnap()
+    {
+        
+        //Only tries to snap if the count is above 1
+        if (lastGroundStep > 1)
+        {
+            return false;
+        }
+        
+        //Abort snapping when current speed exceeds the max snap speed
+        float speed = desiredVelocity.magnitude;
+        if (speed > maxGroundSnapSpeed)
+        {
+            return false;
+        }
+        
+
+        //Checking if there is any ground below to snap onto
+        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit))
+        {
+            return false;
+        }
+        
+        //Using the surface normal vector to se if the surface hit count as ground
+        if (hit.normal.y < minGroundDotProduct)
+        {
+            return false;
+        }
+
+        groundContactCount = 1;
+        contactNormal = hit.normal;
+        
+        //Adjust velocity to align with ground
+        float dot = Vector3.Dot(playerVelocity, hit.normal);
+
+        if (dot > 0f)
+        {
+            playerVelocity = (playerVelocity - hit.normal * dot).normalized * speed;
+        }
+
+        return true;
     }
 
     private Vector3 ProjectOnContactPlane(Vector3 vector)
