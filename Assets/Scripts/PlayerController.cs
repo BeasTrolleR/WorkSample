@@ -55,6 +55,9 @@ public class PlayerController : MonoBehaviour
     private int jumpCount;
     private bool onGround => groundContactCount > 0;
     private float minGroundDotProduct;
+    
+    //Gravity
+    private Vector3 upAxis;
 
     #endregion
 
@@ -76,6 +79,7 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        upAxis = -Physics.gravity.normalized;
         UpdateState();
         AdjustVelocity();
         GroundSnap();
@@ -149,7 +153,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            contactNormal = Vector3.up;
+            contactNormal = upAxis;
         }
     }
 
@@ -159,7 +163,7 @@ public class PlayerController : MonoBehaviour
         {
             lastJumpStep = 0;
             jumpCount++;
-            float jumpVelocity = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
+            float jumpVelocity = Mathf.Sqrt(2f * Physics.gravity.magnitude * playerJumpHeight);
             float alignVelocity = Vector3.Dot(playerVelocity, contactNormal);
             
             //Limit upward velocity to avoid spamming jump and increase speed.
@@ -192,13 +196,14 @@ public class PlayerController : MonoBehaviour
         
 
         //Checking if there is any ground below to snap onto
-        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit))
+        if (!Physics.Raycast(playerRigidbody.position, -upAxis, out RaycastHit hit))
         {
             return false;
         }
         
         //Using the surface normal vector to se if the surface hit count as ground
-        if (hit.normal.y < minGroundDotProduct)
+        float upDot = Vector3.Dot(upAxis, hit.normal);
+        if (upDot < minGroundDotProduct)
         {
             return false;
         }
@@ -228,9 +233,9 @@ public class PlayerController : MonoBehaviour
         for (int i = 0; i < collision.contactCount; i++)
         {
             Vector3 groundNormal = collision.GetContact(i).normal;
-            
+            float UpDot = Vector3.Dot(upAxis, groundNormal);
             //Keep count of how many normals in contact
-            if (groundNormal.y >= minGroundDotProduct)
+            if (UpDot >= minGroundDotProduct)
             {
                 groundContactCount += 1;
                 contactNormal += groundNormal;
