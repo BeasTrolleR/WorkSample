@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -18,6 +19,8 @@ public class PlayerController : MonoBehaviour
     [Header("Character Movement Settings")] 
     [Range(0, 99)][Tooltip("How fast player moves in a direction")]
     [SerializeField] private float playerMoveSpeed = 10f;
+    [Range(0, 99)][Tooltip("How fast player rotates")]
+    [SerializeField] private float playerRotSpeed = 10f;
     [Range(0, 99)][Tooltip("How fast player accelerate when moving.")]
     [SerializeField] private float playerAcceleration = 10f;
     [Range(0, 5)][Tooltip("Number of Air Jumps allowed.")]
@@ -100,6 +103,10 @@ public class PlayerController : MonoBehaviour
         
         //Using player input for desired velocity
         desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.z) * playerMoveSpeed;
+        
+        //Player Rotation
+        Quaternion newRotation = quaternion.LookRotation(desiredVelocity, upAxis);
+        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * playerRotSpeed);
     }
 
     private void AdjustVelocity()
@@ -118,6 +125,7 @@ public class PlayerController : MonoBehaviour
         float newZ = Mathf.MoveTowards(currentZ, desiredVelocity.z, maxSpeedChange);
         
         playerVelocity += xAxis * (newX - currentX) + zAxis * (newZ - currentZ);
+
 
         //Jump Check
         if (isJumping)
