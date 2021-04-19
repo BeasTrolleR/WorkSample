@@ -32,6 +32,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxGroundAngle = 25f;
     [Range(0, 99)][Tooltip("At what speed character snaps to ground")]
     [SerializeField] private float maxGroundSnapSpeed = 99f;
+    [Range(0, 1)][Tooltip("Limiting how far to check for ground")]
+    [SerializeField] private float maxGroundSnapDistance = 99f;
     
     //Player Input
     private Vector3 playerInput;
@@ -49,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     //Misc
     private int groundContactCount;
-    private int lastGroundStep;
+    private int lastGroundStep, lastJumpStep;
     private int jumpCount;
     private bool onGround => groundContactCount > 0;
     private float minGroundDotProduct;
@@ -133,6 +135,7 @@ public class PlayerController : MonoBehaviour
     private void UpdateState()
     {
         lastGroundStep += 1;
+        lastJumpStep += 1;
         playerVelocity = playerRigidbody.velocity;
         
         if (onGround)
@@ -154,6 +157,7 @@ public class PlayerController : MonoBehaviour
     {
         if (onGround || jumpCount < playerAirJumps || GroundSnap())
         {
+            lastJumpStep = 0;
             jumpCount++;
             float jumpVelocity = Mathf.Sqrt(-2f * Physics.gravity.y * playerJumpHeight);
             float alignVelocity = Vector3.Dot(playerVelocity, contactNormal);
@@ -174,8 +178,7 @@ public class PlayerController : MonoBehaviour
     private bool GroundSnap()
     {
         
-        //Only tries to snap if the count is above 1
-        if (lastGroundStep > 1)
+        if (lastGroundStep > 1f || lastJumpStep <=2f)
         {
             return false;
         }
@@ -189,7 +192,7 @@ public class PlayerController : MonoBehaviour
         
 
         //Checking if there is any ground below to snap onto
-        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit))
+        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit, maxGroundSnapDistance))
         {
             return false;
         }
