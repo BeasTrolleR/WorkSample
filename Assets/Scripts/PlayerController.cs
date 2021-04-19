@@ -32,7 +32,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float maxGroundAngle = 25f;
     [Range(0, 99)][Tooltip("At what speed character snaps to ground")]
     [SerializeField] private float maxGroundSnapSpeed = 99f;
-    [Range(0, 1)][Tooltip("Limiting how far to check for ground")]
+    [Range(0, 10)][Tooltip("Limiting how far to check for ground")]
     [SerializeField] private float maxGroundSnapDistance = 99f;
     
     //Player Input
@@ -192,7 +192,7 @@ public class PlayerController : MonoBehaviour
         
 
         //Checking if there is any ground below to snap onto
-        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit, maxGroundSnapDistance))
+        if (!Physics.Raycast(playerRigidbody.position, Vector3.down, out RaycastHit hit))
         {
             return false;
         }
