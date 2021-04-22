@@ -7,6 +7,8 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
+          <e p="GravityManager.cs" t="Include" />
+          <e p="GravityPad.cs" t="Include" />
           <e p="PlayerController.cs" t="Include" />
         </e>
       </e>

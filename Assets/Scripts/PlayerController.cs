@@ -104,9 +104,12 @@ public class PlayerController : MonoBehaviour
         //Using player input for desired velocity
         desiredVelocity = new Vector3(playerInput.x, 0f, playerInput.z) * playerMoveSpeed;
         
-        //Player Rotation
-        Quaternion newRotation = quaternion.LookRotation(desiredVelocity, upAxis);
-        transform.rotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * playerRotSpeed);
+        //Player Rotation. Since desiredVelocity is 0 without any input, do an input check otherwise NaN error.
+        if (desiredVelocity.x != 0 || desiredVelocity.z != 0)
+        {
+            Quaternion newRotation = quaternion.LookRotation(desiredVelocity, upAxis);
+            transform.localRotation = Quaternion.Slerp(transform.rotation, newRotation, Time.deltaTime * playerRotSpeed);
+        }
     }
 
     private void AdjustVelocity()
