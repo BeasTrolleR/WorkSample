@@ -274,7 +274,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 53317418}
-  m_LocalRotation: {x: 0.3826835, y: -0.000000020749308, z: 0.000000008594646, w: 0.92387956}
+  m_LocalRotation: {x: 0.3826835, y: 0.00000002248122, z: -0.000000009312028, w: 0.92387956}
   m_LocalPosition: {x: 9.999999, y: 9.625, z: -12.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -5696,7 +5696,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770399954}
-  m_LocalRotation: {x: 0.3826835, y: -0.000000020749308, z: 0.000000008594646, w: 0.92387956}
+  m_LocalRotation: {x: 0.3826835, y: 0.00000002248122, z: -0.000000009312028, w: 0.92387956}
   m_LocalPosition: {x: 9.999999, y: 9.625, z: -12.25}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -13123,10 +13123,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1797239762647393780, guid: 8d9a63953dba4164ba01ac37f907b073, type: 3}
-      propertyPath: changeGravityDirection
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1797239762647393781, guid: 8d9a63953dba4164ba01ac37f907b073, type: 3}
       propertyPath: m_Name
       value: GravityManager
@@ -13244,10 +13240,6 @@ PrefabInstance:
     - target: {fileID: 8176537780656658330, guid: 2d35cb40afac2f94da51b1a95fbb17b7, type: 3}
       propertyPath: m_Name
       value: CameraManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 8176537780656658331, guid: 2d35cb40afac2f94da51b1a95fbb17b7, type: 3}
-      propertyPath: lerpAmount
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2d35cb40afac2f94da51b1a95fbb17b7, type: 3}

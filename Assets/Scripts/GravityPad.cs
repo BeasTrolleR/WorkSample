@@ -15,13 +15,12 @@ public class GravityPad : MonoBehaviour
     {
         gManager = FindObjectOfType<GravityManager>();
         cManager = FindObjectOfType<CameraManager>();
-
-        //Safety debugging in case dependency is broken.
+        
+        //For easy debugging if the dependencies are lost.
+        if (cManager == null)
+            Debug.LogError("No CameraManager in scene");
         if (gManager == null)
-        {
-            Debug.LogError("There is no GravityManager in scene");
-            EditorApplication.isPlaying = false;
-        }
+            Debug.LogError("No GravityManager in scene");
     }
     
 
@@ -30,7 +29,6 @@ public class GravityPad : MonoBehaviour
         //Swap the physics gravity in GravityManager when player collide with pad.
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("player detected");
             cManager.camOffsetChange = !cManager.camOffsetChange;
             gManager.changeGravityDirection = !gManager.changeGravityDirection;
         }
