@@ -21,6 +21,7 @@ public class GravityManager : MonoBehaviour
 
     }
 
+    //Sets the gravity to either positive or negative.
     private void GravitySwap()
     {
         if (changeGravityDirection == false)
